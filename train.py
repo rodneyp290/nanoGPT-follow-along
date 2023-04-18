@@ -32,6 +32,6 @@ print("------------START------------")
 print(data[:1000])
 print("-------------END-------------")
 
-first_90pc_index = 0.9 * len(data)
+first_90pc_index = int(0.9 * len(data))
 train_data = data[:first_90pc_index]
 valid_data = data[first_90pc_index:]
