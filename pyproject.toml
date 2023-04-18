@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "rodney-nanogpt"
+version = "0.1.0"
+description = "In implementation of Andrej Karpathy's nanoGPT, based on \"Let's build GPT: from scratch, in code, spelled out.\" YouTube Video"
+authors = ["Rodney Pilgrim <r.pilgrim@deakin.edu.au>"]
+readme = "README.md"
+packages = [{include = "rodney_nanogpt"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+torch = "^2.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
