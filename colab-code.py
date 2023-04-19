@@ -129,3 +129,22 @@ print("loss: ", loss)
 idx = torch.zeros((1, 1), dtype=torch.long)
 generated = model.generate(idx, max_new_tokens=100)[0]
 print(decode(generated.tolist()))
+
+# create a PyTorch Optimizer
+optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
+
+batch_size = 32
+for steps in range(int(5e5)):
+    # sample a batch of data
+    xb, yb = get_batch("train")
+
+    #evaluate the loss
+    logits, loss = model(xb, yb)
+    optimizer.zero_grad(set_to_none=True)
+    loss.backward()
+    optimizer.step()
+
+print(loss.item())
+idx = torch.zeros((1, 1), dtype=torch.long)
+generated = model.generate(idx, max_new_tokens=100)[0]
+print(decode(generated.tolist()))
