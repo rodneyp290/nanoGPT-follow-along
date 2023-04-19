@@ -134,7 +134,7 @@ print(decode(generated.tolist()))
 optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
 
 batch_size = 32
-for steps in range(int(5e5)):
+for steps in range(int(1e1)):
     # sample a batch of data
     xb, yb = get_batch("train")
 
@@ -148,3 +148,20 @@ print(loss.item())
 idx = torch.zeros((1, 1), dtype=torch.long)
 generated = model.generate(idx, max_new_tokens=100)[0]
 print(decode(generated.tolist()))
+
+# consider the following toy example
+
+torch.manual_seed(1337)
+B,T,C = 4, 8, 2 # Batch, Time, Channels
+x = torch.randn(B,T,C)
+print("toy x shape:", x.shape)
+
+# we want x[b,t] = mean{i<t} x[b,i] ? think that should be xbow[b,t] = ...
+xbow = torch.zeros((B,T,C))
+for b in range(B):
+    for t in range(T):
+        xprev = x[b,:t+1] # t, C
+        xbow[b,t] = torch.mean(xprev,0)
+
+print("x[0]: ", x[0])
+print("xbow[0]: ", xbow[0])
