@@ -138,7 +138,7 @@ for steps in range(int(1e1)):
     # sample a batch of data
     xb, yb = get_batch("train")
 
-    #evaluate the loss
+    # evaluate the loss
     logits, loss = model(xb, yb)
     optimizer.zero_grad(set_to_none=True)
     loss.backward()
@@ -152,44 +152,44 @@ print(decode(generated.tolist()))
 # consider the following toy example
 
 torch.manual_seed(1337)
-B,T,C = 4, 8, 2 # Batch, Time, Channels
-x = torch.randn(B,T,C)
+B, T, C = 4, 8, 2  # Batch, Time, Channels
+x = torch.randn(B, T, C)
 print("toy x shape:", x.shape)
 
 # we want x[b,t] = mean{i<t} x[b,i] ? think that should be xbow[b,t] = ...
-xbow = torch.zeros((B,T,C))
+xbow = torch.zeros((B, T, C))
 for b in range(B):
     for t in range(T):
-        xprev = x[b,:t+1] # t, C
-        xbow[b,t] = torch.mean(xprev,0)
+        xprev = x[b, : t + 1]  # t, C
+        xbow[b, t] = torch.mean(xprev, 0)
 
 print("x[0]: ", x[0])
 print("xbow[0]: ", xbow[0])
 
 # matrix multiplication trick
 torch.manual_seed(42)
-a = torch.tril(torch.ones(3,3))
+a = torch.tril(torch.ones(3, 3))
 a = a / torch.sum(a, 1, keepdim=True)
-b = torch.randint(0,10,(3,2)).float()
+b = torch.randint(0, 10, (3, 2)).float()
 c = a @ b
 print("a=", a)
 print("b=", b)
 print("c=", c)
 
 # back to Toy example
-wei = torch.tril(torch.ones(T,T))
+wei = torch.tril(torch.ones(T, T))
 wei = wei / wei.sum(1, keepdim=True)
 print("weights: ", wei)
 
-xbow2 = wei @ x 
+xbow2 = wei @ x
 # (T, T) @ (B, T, C) --> (B*, T, T) @  (B, T, C) --> (B, T, C)
 #  * B added by torch to match shape
 
 print("xbow == xbow2:", torch.allclose(xbow, xbow2))
 
-tril = torch.tril(torch.ones(T,T))
-wei = torch.zeros((T,T))
-wei = wei.masked_fill(tril == 0, float('-inf'))
+tril = torch.tril(torch.ones(T, T))
+wei = torch.zeros((T, T))
+wei = wei.masked_fill(tril == 0, float("-inf"))
 wei = F.softmax(wei, dim=1)
 xbow3 = wei @ x
 print("xbow == xbow3:", torch.allclose(xbow, xbow3))
