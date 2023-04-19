@@ -186,3 +186,10 @@ xbow2 = wei @ x
 #  * B added by torch to match shape
 
 print("xbow == xbow2:", torch.allclose(xbow, xbow2))
+
+tril = torch.tril(torch.ones(T,T))
+wei = torch.zeros((T,T))
+wei = wei.masked_fill(tril == 0, float('-inf'))
+wei = F.softmax(wei, dim=1)
+xbow3 = wei @ x
+print("xbow == xbow3:", torch.allclose(xbow, xbow3))
