@@ -166,6 +166,7 @@ for b in range(B):
 print("x[0]: ", x[0])
 print("xbow[0]: ", xbow[0])
 
+# matrix multiplication trick
 torch.manual_seed(42)
 a = torch.tril(torch.ones(3,3))
 a = a / torch.sum(a, 1, keepdim=True)
@@ -174,3 +175,14 @@ c = a @ b
 print("a=", a)
 print("b=", b)
 print("c=", c)
+
+# back to Toy example
+wei = torch.tril(torch.ones(T,T))
+wei = wei / wei.sum(1, keepdim=True)
+print("weights: ", wei)
+
+xbow2 = wei @ x 
+# (T, T) @ (B, T, C) --> (B*, T, T) @  (B, T, C) --> (B, T, C)
+#  * B added by torch to match shape
+
+print("xbow == xbow2:", torch.allclose(xbow, xbow2))
