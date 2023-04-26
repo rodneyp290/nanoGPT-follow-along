@@ -209,7 +209,7 @@ k = key(x) # (B, T, 16)
 q = query(x) # (B, T, 16)
 v = value(x) # (B, T, 16)
 
-wei = q @ k.transpose(-2, -1) # (B, T, 16) @ (B, T, 16) ---> (B, T, T)
+wei = q @ k.transpose(-2, -1) # (B, T, 16) @ (B, 16, T) ---> (B, T, T)
 
 tril = torch.tril(torch.ones(T,T))
 #wei = torch.zeros((T,T))
