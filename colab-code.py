@@ -216,6 +216,12 @@ tril = torch.tril(torch.ones(T,T))
 wei = wei.masked_fill(tril == 0, float("-inf"))
 wei = F.softmax(wei, dim=-1)
 out = wei @ v
-
+ 
 print("v4 self-attention out shape", out.shape)
 print("v4 self-attention wei[0]\n", wei[0])
+
+# Notes 1-6: Not added because it is more about the video explanation
+#   (same probably could be said for most of this file but ¯\_(ツ)_/¯ )
+# basically wei should be below to avoid "over-sharpening to max"
+# i.e. kept -1 < values < 1 or something like that ("control the variance")
+wei = q @ k.transpose(-2, -1) * (head_size ** -0.5)
